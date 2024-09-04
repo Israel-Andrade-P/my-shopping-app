@@ -1,2 +1,8 @@
-package com.zel92.user.service;public interface UserService {
+package com.zel92.user.service;
+
+import com.zel92.user.dto.request.UserRequest;
+
+public interface UserService {
+
+    void createUser(UserRequest user);
 }

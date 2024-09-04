@@ -1,2 +1,4 @@
-package com.zel92.user.dto.request;public record UserRequest() {
+package com.zel92.user.dto.request;
+
+public record UserRequest() {
 }
