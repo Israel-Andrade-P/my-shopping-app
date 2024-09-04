@@ -2,9 +2,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-services/user/.mvn/wrapper/maven-wrapper.properties
-services/user/mvnw
-services/user/mvnw.cmd
+services/**/.mvn/wrapper/maven-wrapper.properties
+services/**/mvnw
+services/**/mvnw.cmd
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
