@@ -41,7 +41,7 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void beforePersist(){
-        var userId = 1L;//RequestContext.getUserId();
+        var userId = 0L;//RequestContext.getUserId();
         //if (userId == null) {throw new ApiException("Cannot persist entity without user ID in Request Context for this thread");}
         setCreatedAt(now());
         setCreatedBy(Long.valueOf(userId));
@@ -51,7 +51,7 @@ public abstract class BaseEntity {
 
     @PreUpdate
     public void beforeUpdate(){
-        var userId = 1L;//RequestContext.getUserId();
+        var userId = 0L;//RequestContext.getUserId();
         //if (userId == null) {throw new ApiException("Cannot update entity without user ID in Request Context for this thread");}
         setUpdatedAt(now());
         setUpdatedBy(Long.valueOf(userId));

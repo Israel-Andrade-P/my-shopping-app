@@ -1,0 +1,2 @@
+INSERT INTO users(id, user_id, first_name, last_name, email, reference_id, last_login, login_attempts, enabled, account_non_expired, account_non_locked, created_by, updated_by, created_at, updated_at, role, dob, telephone)
+VALUES(0, 'system', 'Mr.', 'System', 'system@mail.com', 'Its me the system', CURRENT_TIMESTAMP, 0, true, true, true, 0, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'SUPER_ADMIN', to_date('05 Dec 2000', 'DD Mon YYYY'), '555Iamthesupremesystem');

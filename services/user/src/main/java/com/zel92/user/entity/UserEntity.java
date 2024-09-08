@@ -35,8 +35,6 @@ public class UserEntity extends BaseEntity{
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean enabled;
-    @OneToOne
-    private LocationEntity location;
     @ManyToOne(targetEntity = RoleEntity.class)
     @JoinColumn(name = "role", referencedColumnName = "name")
     private RoleEntity role;
