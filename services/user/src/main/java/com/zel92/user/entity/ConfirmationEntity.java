@@ -3,10 +3,15 @@ package com.zel92.user.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.zel92.user.constants.Constants;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.Date;
+
+import static com.zel92.user.constants.Constants.*;
 
 @Entity
 @Table(name = "confirmations")

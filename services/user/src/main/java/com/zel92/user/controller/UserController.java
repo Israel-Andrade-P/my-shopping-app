@@ -7,16 +7,14 @@ import com.zel92.user.utils.ResponseUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
 import static com.zel92.user.utils.ResponseUtils.*;
 import static java.util.Collections.emptyMap;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -29,6 +27,12 @@ public class UserController {
         userService.createUser(user);
         return ResponseEntity.created(getURI())
                 .body(getResponse(CREATED, request, "Your account has been created successfully. Please check your email to enable your account.", emptyMap()));
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<Response> verifyAccount(@RequestParam(name = "key") String key, HttpServletRequest request){
+        userService.verifyAccount(key);
+        return ResponseEntity.ok().body(getResponse(OK, request, "Your account has been verified", emptyMap()));
     }
 
     private URI getURI() {
