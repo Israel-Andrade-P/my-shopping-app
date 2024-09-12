@@ -31,7 +31,6 @@ public class UserUtils {
         String pool = "0123456789ABCDEFGHIJ";
         SecureRandom random = new SecureRandom();
         StringBuilder builder = new StringBuilder();
-        int c = 0;
         for (int i = 0; i < 9; i++){
             int randomIndex = random.nextInt(pool.length());
             builder.append(pool.charAt(randomIndex));

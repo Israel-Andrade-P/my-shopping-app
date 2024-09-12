@@ -1,6 +1,5 @@
 package com.zel92.user.service.impl;
 
-import com.zel92.user.constants.Constants;
 import com.zel92.user.dto.request.UserRequest;
 import com.zel92.user.entity.ConfirmationEntity;
 import com.zel92.user.entity.CredentialEntity;
@@ -13,18 +12,15 @@ import com.zel92.user.exception.UserNotFoundException;
 import com.zel92.user.repository.*;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.LocationUtils;
-import com.zel92.user.utils.UserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.function.Supplier;
 
-import static com.zel92.user.constants.Constants.*;
-import static com.zel92.user.utils.UserUtils.*;
-import static java.time.LocalDateTime.*;
+import static com.zel92.user.constants.Constants.EXPIRATION;
+import static com.zel92.user.utils.UserUtils.buildUserEntity;
+import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
     private void isKeyValid(ConfirmationEntity confirmationEntity) {
         if (confirmationEntity.getCreatedAt().plusMinutes(EXPIRATION).isBefore(now())){
+            confirmationRepository.delete(confirmationEntity);
             throw new ConfirmationKeyExpiredException("The confirmation key is expired. Please request a new key");
         }
     }
