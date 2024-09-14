@@ -3,6 +3,7 @@ package com.zel92.user.utils;
 import com.zel92.user.dto.request.UserRequest;
 import com.zel92.user.entity.RoleEntity;
 import com.zel92.user.entity.UserEntity;
+import com.zel92.user.kafka.AccountVerificationDTO;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -25,6 +26,10 @@ public class UserUtils {
                 .enabled(false)
                 .role(role)
                 .build();
+    }
+
+    public static AccountVerificationDTO buildAccVerificationDto(String firstName, String lastName, String email, String key){
+        return new AccountVerificationDTO(firstName, lastName, email, key);
     }
 
     private static final Supplier<String> suppliesUserId = () -> {

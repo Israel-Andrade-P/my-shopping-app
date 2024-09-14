@@ -9,6 +9,7 @@ import com.zel92.user.exception.ConfirmationKeyExpiredException;
 import com.zel92.user.exception.CustomInvalidKeyException;
 import com.zel92.user.exception.RoleDoesntExistException;
 import com.zel92.user.exception.UserNotFoundException;
+import com.zel92.user.kafka.UserProducer;
 import com.zel92.user.repository.*;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.LocationUtils;
@@ -19,6 +20,7 @@ import java.security.SecureRandom;
 import java.util.function.Supplier;
 
 import static com.zel92.user.constants.Constants.EXPIRATION;
+import static com.zel92.user.utils.UserUtils.buildAccVerificationDto;
 import static com.zel92.user.utils.UserUtils.buildUserEntity;
 import static java.time.LocalDateTime.now;
 
@@ -30,16 +32,17 @@ public class UserServiceImpl implements UserService {
     private final ConfirmationRepository confirmationRepository;
     private final RoleRepository roleRepository;
     private final LocationRepository locationRepository;
+    private final UserProducer producer;
 
     @Override
     public void createUser(UserRequest user) {
         UserEntity userEntity = userRepository.save(createNewUser(user));
         credentialRepository.save(new CredentialEntity(userEntity, user.password()));
-        confirmationRepository.save(new ConfirmationEntity(userEntity, suppliesKey.get()));
+        ConfirmationEntity confirmation = confirmationRepository.save(new ConfirmationEntity(userEntity, suppliesKey.get()));
         locationRepository.save(LocationUtils.buildLocation(user.location(), userEntity));
-        //Request notification service to send email to user
-    }
 
+        sendMessageToBroker(user.firstName(), user.lastName(), user.email(), confirmation.getKey());
+    }
     @Override
     public void verifyAccount(String key) {
         var confirmationEntity = getConfirmationByKey(key);
@@ -49,33 +52,32 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         confirmationRepository.delete(confirmationEntity);
     }
-
-
     private void isKeyValid(ConfirmationEntity confirmationEntity) {
         if (confirmationEntity.getCreatedAt().plusMinutes(EXPIRATION).isBefore(now())){
             confirmationRepository.delete(confirmationEntity);
             throw new ConfirmationKeyExpiredException("The confirmation key is expired. Please request a new key");
         }
     }
-
     private UserEntity getUserEntityByEmail(String email){
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
-
     private ConfirmationEntity getConfirmationByKey(String key) {
        return confirmationRepository.findByKey(key)
                 .orElseThrow(() -> new CustomInvalidKeyException("The key is invalid"));
     }
-
     private UserEntity createNewUser(UserRequest user) {
         var role = getRole();
         return buildUserEntity(user, role);
     }
-
     private RoleEntity getRole() {
         return roleRepository.findByRoleName("USER")
                 .orElseThrow(() -> new RoleDoesntExistException("This role doesn't exist"));
+    }
+
+    private void sendMessageToBroker(String firstName, String lastName, String email, String key) {
+        var accountVerificationDto = buildAccVerificationDto(firstName, lastName, email, key);
+        producer.sendAccountVerificationMessage(accountVerificationDto);
     }
 
     private final Supplier<String> suppliesKey = () -> {

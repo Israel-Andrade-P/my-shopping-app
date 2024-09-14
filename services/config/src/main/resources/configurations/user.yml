@@ -14,12 +14,19 @@ spring:
           globally_quoted_identifiers: true
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
-    flyway:
-      baseline-on-migrate: true
-      enabled: true
-      baseline-description: "init"
-      baseline-version: 0
-      user: zel
-      password: 123
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    baseline-description: "init"
+    baseline-version: 0
+    user: zel
+    password: 123
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: accVer:com.zel92.user.kafka.AccountVerificationDTO
 server:
   port: 8001
