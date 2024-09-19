@@ -31,6 +31,20 @@ services:
       - shop-network
     restart: unless-stopped
 
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: notifications
+    volumes:
+      - mongo:/data/db
+    networks:
+      - shop-network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     hostname: zookeeper
@@ -60,6 +74,21 @@ services:
     networks:
       - shop-network
 
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka
+    ports:
+      - "8085:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+    networks:
+      - shop-network
+
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
@@ -75,9 +104,19 @@ services:
     networks:
       - shop-network
 
+  maildev:
+    image: maildev/maildev
+    container_name: mail-dev
+    ports:
+      - 1080:1080
+      - 1025:1025
+    networks:
+      - shop-network
+
 networks:
   shop-network:
     driver: bridge
 volumes:
   postgres:
   pgadmin:
+  mongo:

@@ -20,7 +20,7 @@ import java.security.SecureRandom;
 import java.util.function.Supplier;
 
 import static com.zel92.user.constants.Constants.EXPIRATION;
-import static com.zel92.user.utils.UserUtils.buildAccVerificationDto;
+import static com.zel92.user.utils.UserUtils.buildAccVerificationEvent;
 import static com.zel92.user.utils.UserUtils.buildUserEntity;
 import static java.time.LocalDateTime.now;
 
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         ConfirmationEntity confirmation = confirmationRepository.save(new ConfirmationEntity(userEntity, suppliesKey.get()));
         locationRepository.save(LocationUtils.buildLocation(user.location(), userEntity));
 
-        sendMessageToBroker(user.firstName(), user.lastName(), user.email(), confirmation.getKey());
+        sendMessageToBroker(userEntity.fullName(), user.email(), confirmation.getKey());
     }
     @Override
     public void verifyAccount(String key) {
@@ -75,8 +75,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RoleDoesntExistException("This role doesn't exist"));
     }
 
-    private void sendMessageToBroker(String firstName, String lastName, String email, String key) {
-        var accountVerificationDto = buildAccVerificationDto(firstName, lastName, email, key);
+    private void sendMessageToBroker(String userFullName, String email, String key) {
+        var accountVerificationDto = buildAccVerificationEvent(userFullName, email, key);
         producer.sendAccountVerificationMessage(accountVerificationDto);
     }
 

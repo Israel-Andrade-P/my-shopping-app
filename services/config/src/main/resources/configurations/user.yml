@@ -22,11 +22,13 @@ spring:
     user: zel
     password: 123
   kafka:
+    bootstrap-servers: localhost:9092
     producer:
-      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
-        spring.json.type.mapping: accVer:com.zel92.user.kafka.AccountVerificationDTO
+        schema:
+          registry:
+            url: http://127.0.0.1:8085
 server:
   port: 8001

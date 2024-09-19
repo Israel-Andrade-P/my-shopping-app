@@ -38,4 +38,8 @@ public class UserEntity extends BaseEntity{
     @ManyToOne(targetEntity = RoleEntity.class)
     @JoinColumn(name = "role", referencedColumnName = "name")
     private RoleEntity role;
+
+    public String fullName(){
+        return this.firstName + " " + this.lastName;
+    }
 }
