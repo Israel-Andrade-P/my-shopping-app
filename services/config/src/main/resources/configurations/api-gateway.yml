@@ -6,7 +6,7 @@ spring:
           enabled: true
       routes:
         - id: user
-          uri: lb:http://USER
+          uri: lb:http://USER-SERVICE
           predicates:
             - Path=/api/v1/users/**
 server:
