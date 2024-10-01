@@ -3,10 +3,11 @@ package com.zel92.user.service.impl;
 import com.zel92.user.domain.Token;
 import com.zel92.user.domain.TokenData;
 import com.zel92.user.enumeration.TokenType;
+import com.zel92.user.exception.InvalidJwtException;
 import com.zel92.user.model.User;
 import com.zel92.user.security.JwtConfig;
+import com.zel92.user.service.AuthService;
 import com.zel92.user.service.JwtService;
-import com.zel92.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +34,7 @@ import static org.springframework.security.core.authority.AuthorityUtils.commaSe
 @Service
 @RequiredArgsConstructor
 public class JwtServiceImpl extends JwtConfig implements JwtService {
-    private final UserService userService;
+    private final AuthService userService;
 
     private final Supplier<SecretKey> key = () -> Keys.hmacShaKeyFor(Decoders.BASE64.decode(getSecret()));
 
@@ -88,11 +89,16 @@ public class JwtServiceImpl extends JwtConfig implements JwtService {
         return tokenDataFunction.apply(
                 TokenData.builder()
                         .valid(Objects.equals(userService.getUserByEmail(subject.apply(token)).getEmail(), getClaims.apply(token).getSubject()) &&
-                                getClaimsValue(token, Claims::getExpiration).before(new Date()))
+                                getClaimsValue(token, Claims::getExpiration).after(new Date()))
                         .authorities(authorities.apply(token))
                         .claims(getClaims.apply(token))
                         .user(userService.getUserByEmail(subject.apply(token)))
                         .build()
         );
     }
+    @Override
+    public Boolean validateToken(String jwt){
+        return getTokenData(jwt, TokenData::getValid);
+    }
+
 }

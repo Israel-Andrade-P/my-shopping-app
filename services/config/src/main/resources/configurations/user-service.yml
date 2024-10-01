@@ -32,6 +32,6 @@ spring:
             url: http://127.0.0.1:8085
 jwt:
   secret: cHJpemVjbGltYmVsc2V3aXRobmVnYXRpdmV0b3NhZmV0eWZyZXF1ZW50bHlkb29ydXBwZXJtb3Rpb25pbmNyZWFzZXBsYWluc3Rp
-  expiration: 432_000_000
+  expiration: 1800
 server:
   port: 8001

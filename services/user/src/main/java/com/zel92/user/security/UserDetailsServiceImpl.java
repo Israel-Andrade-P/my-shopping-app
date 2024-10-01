@@ -1,7 +1,7 @@
 package com.zel92.user.security;
 
 import com.zel92.user.domain.UserSecurity;
-import com.zel92.user.service.UserService;
+import com.zel92.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
+    private final AuthService userService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

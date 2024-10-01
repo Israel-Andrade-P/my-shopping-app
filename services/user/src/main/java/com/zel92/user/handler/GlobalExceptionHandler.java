@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handle(Exception exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "Oops! Something went wrong. An unexpected error has occurred")
+                new ErrorResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "Oops! Something went wrong. An unexpected error has occurred: " + exception.getMessage())
         );
     }
 

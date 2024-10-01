@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 
@@ -29,6 +28,7 @@ public class RequestUtils {
         try{
             var outputStream = httpServletResponse.getOutputStream();
             new ObjectMapper().writeValue(outputStream, response);
+            outputStream.flush();
         }catch (Exception exception){
             throw new GenericException(exception.getMessage());
         }
@@ -50,10 +50,8 @@ public class RequestUtils {
     }
 
     public static void handleErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception){
-        if (exception instanceof AccessDeniedException){
             Response apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
             writeResponse.accept(response, apiResponse);
-        }
     }
 
     private static Response getErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception, HttpStatus status) {

@@ -10,4 +10,5 @@ public interface JwtService {
 
     String createToken(User user, Function<Token, String> tokenFunction);
     <T> T getTokenData(String token, Function<TokenData, T> tokenDataFunction);
+    Boolean validateToken(String jwt);
 }

@@ -8,6 +8,15 @@ spring:
         - id: user
           uri: lb:http://USER-SERVICE
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/v1/auth/**, /api/v1/users/**
+        - id: product
+          uri: lb:http://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/v1/products/**
+          filters:
+            - TokenValidationFilter
 server:
   port: 9000
+client:
+  user:
+    url: http://localhost:8001
