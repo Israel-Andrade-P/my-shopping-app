@@ -30,8 +30,6 @@ public class ProductEntity {
     private String description;
     @Column(name = "price", nullable = false)
     private BigDecimal price;
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
     private String ownerId;
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)

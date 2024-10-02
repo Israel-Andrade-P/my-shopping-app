@@ -15,6 +15,12 @@ spring:
             - Path=/api/v1/products/**
           filters:
             - TokenValidationFilter
+        - id: order
+          uri: lb:http://ORDER-SERVICE
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - TokenValidationFilter
 server:
   port: 9000
 client:

@@ -15,7 +15,6 @@ public class ProductUtils {
                 .name(product.name())
                 .description(product.description())
                 .price(product.price())
-                .quantity(product.quantity())
                 .ownerId(null)
                 .category(category)
                 .build();

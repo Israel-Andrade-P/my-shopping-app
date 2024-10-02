@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/products
+    url: jdbc:postgresql://localhost:5433/inventories
     username: zel
     password: 123
     jpa:
@@ -21,8 +21,5 @@ spring:
     baseline-version: 0
     user: zel
     password: 123
-client:
-  inventory:
-    url: http://localhost:8004
 server:
-  port: 8002
+  port: 8004

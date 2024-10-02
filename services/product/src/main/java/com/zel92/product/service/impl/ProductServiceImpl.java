@@ -1,5 +1,6 @@
 package com.zel92.product.service.impl;
 
+import com.zel92.product.client.InventoryClient;
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
 import com.zel92.product.entity.CategoryEntity;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final InventoryClient inventoryClient;
 
     @Override
     public void createProduct(ProductRequest product) {
-        productRepository.save(createNewProductEntity(product));
+        ProductEntity productEntity = productRepository.save(createNewProductEntity(product));
+        inventoryClient.persist(productEntity.getProductId(), product.quantity());
     }
 
     @Override
