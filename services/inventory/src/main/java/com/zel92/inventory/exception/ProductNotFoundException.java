@@ -1,4 +1,4 @@
-package com.zel92.product.exception;
+package com.zel92.inventory.exception;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(String message) {

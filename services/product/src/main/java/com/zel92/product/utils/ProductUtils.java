@@ -30,10 +30,10 @@ public class ProductUtils {
     }
 
     private final static Supplier<String> supplyProductId = () -> {
-        String pool  = "1234567890ABCDEFGHIJK";
+        String pool  = "1234567890";
         StringBuilder builder = new StringBuilder();
         SecureRandom random = new SecureRandom();
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i < 6; i++){
             var randIndex = random.nextInt(pool.length());
             builder.append(pool.charAt(randIndex));
         }
