@@ -1,9 +1,10 @@
 package com.zel92.inventory.service;
 
-import java.util.List;
+import com.zel92.inventory.dto.OrderDTO;
+import com.zel92.inventory.dto.ProductCheck;
 
 public interface InventoryService {
 
     void persistInventory(String productId, Integer quantity);
-    Boolean checkStock(List<String> productIds, List<Integer> quantities);
+    ProductCheck checkStock(OrderDTO inventoryCheck);
 }

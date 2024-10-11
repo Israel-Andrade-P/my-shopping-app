@@ -19,11 +19,10 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class OrderedItem {
     @Id
-    @SequenceGenerator(name = "ordered_product_id_seq", sequenceName = "ordered_product_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordered_product_id_seq")
+    @SequenceGenerator(name = "ordered_items_id_seq", sequenceName = "ordered_items_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ordered_items_id_seq")
     private Long id;
     private String productId;
-    private String name;
     private BigDecimal price;
     private Integer quantity;
     @CreatedDate

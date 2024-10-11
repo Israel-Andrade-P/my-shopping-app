@@ -1,6 +1,7 @@
 package com.zel92.product.service.impl;
 
 import com.zel92.product.client.InventoryClient;
+import com.zel92.product.dto.OrderDTO;
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
 import com.zel92.product.entity.CategoryEntity;
@@ -13,6 +14,9 @@ import com.zel92.product.service.ProductService;
 import com.zel92.product.utils.ProductUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +42,11 @@ public class ProductServiceImpl implements ProductService {
         var product = getProductEntityById(productId);
         productRepository.delete(product);
     }
-
+    @Override
+    public List<BigDecimal> getPrice(OrderDTO orderDTO) {
+        List<ProductEntity> products = productRepository.findAllByProductIdInOrderByProductId(orderDTO.productIds());
+        return products.stream().map(ProductEntity::getPrice).toList();
+    }
     private ProductEntity getProductEntityById(String productId) {
         return productRepository
                 .findByProductId(productId)

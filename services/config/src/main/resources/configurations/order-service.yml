@@ -21,5 +21,10 @@ spring:
     baseline-version: 0
     user: zel
     password: 123
+client:
+  inventory:
+    url: http://localhost:8004
+  product:
+    url: http://localhost:8002
 server:
   port: 8003

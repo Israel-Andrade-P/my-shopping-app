@@ -36,4 +36,9 @@ public class OrderEntity {
     private LocalDateTime updatedAt;
     @OneToMany
     private List<OrderedItem> orderedProducts;
+
+    public OrderEntity(String clientName, BigDecimal totalAmount){
+        this.clientName = clientName;
+        this.totalAmount = totalAmount;
+    }
 }

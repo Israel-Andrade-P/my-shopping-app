@@ -1,6 +1,7 @@
 package com.zel92.product.controller;
 
 import com.zel92.product.domain.Response;
+import com.zel92.product.dto.OrderDTO;
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
 import com.zel92.product.service.ProductService;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
 
 import static com.zel92.product.constants.Constants.PRODUCT_ADDED;
 import static com.zel92.product.constants.Constants.PRODUCT_DELETED;
@@ -40,6 +43,11 @@ public class ProductController {
     public ResponseEntity<Response> deleteProductById(@PathVariable("id") String productId, HttpServletRequest request){
         service.deleteProduct(productId);
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), PRODUCT_DELETED, OK));
+    }
+
+    @PostMapping("/price")
+    public List<BigDecimal> getPrice(@RequestBody OrderDTO orderDTO){
+        return service.getPrice(orderDTO);
     }
 
     private URI getUri(){

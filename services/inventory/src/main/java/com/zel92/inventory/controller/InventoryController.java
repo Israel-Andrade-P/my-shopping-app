@@ -1,11 +1,10 @@
 package com.zel92.inventory.controller;
 
+import com.zel92.inventory.dto.OrderDTO;
+import com.zel92.inventory.dto.ProductCheck;
 import com.zel92.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/inventories")
@@ -17,5 +16,10 @@ public class InventoryController {
     public void persist(@RequestParam(name = "product-id") String productId,
                         @RequestParam(name = "quantity") Integer quantity){
         service.persistInventory(productId, quantity);
+    }
+
+    @PostMapping("/stock")
+    public ProductCheck checkStock(@RequestBody OrderDTO orderDTO){
+        return service.checkStock(orderDTO);
     }
 }
