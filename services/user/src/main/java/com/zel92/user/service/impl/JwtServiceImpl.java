@@ -2,12 +2,14 @@ package com.zel92.user.service.impl;
 
 import com.zel92.user.domain.Token;
 import com.zel92.user.domain.TokenData;
+import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.enumeration.TokenType;
 import com.zel92.user.exception.InvalidJwtException;
 import com.zel92.user.model.User;
 import com.zel92.user.security.JwtConfig;
 import com.zel92.user.service.AuthService;
 import com.zel92.user.service.JwtService;
+import com.zel92.user.utils.UserUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -26,6 +28,7 @@ import java.util.function.Supplier;
 import static com.zel92.user.constants.Constants.*;
 import static com.zel92.user.enumeration.TokenType.ACCESS;
 import static com.zel92.user.enumeration.TokenType.REFRESH;
+import static com.zel92.user.utils.UserUtils.*;
 import static io.jsonwebtoken.Header.JWT_TYPE;
 import static io.jsonwebtoken.Header.TYPE;
 import static java.time.Instant.now;
@@ -100,5 +103,13 @@ public class JwtServiceImpl extends JwtConfig implements JwtService {
     public Boolean validateToken(String jwt){
         return getTokenData(jwt, TokenData::getValid);
     }
+
+    @Override
+    public UserResponse retrieveUser(String token) {
+        var user = userService.getUserByEmail(subject.apply(token));
+        var location = userService.getLocationByUserId(user.getId());
+        return toUserResponse(user, location);
+    }
+
 
 }

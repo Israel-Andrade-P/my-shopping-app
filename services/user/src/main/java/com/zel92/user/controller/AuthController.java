@@ -2,6 +2,7 @@ package com.zel92.user.controller;
 
 import com.zel92.user.domain.Response;
 import com.zel92.user.dto.request.UserRequest;
+import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.service.AuthService;
 import com.zel92.user.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,11 @@ public class AuthController {
     @GetMapping("/validate")
     public Boolean validateJwt(@RequestParam(name = "token") String jwt){
        return jwtService.validateToken(jwt);
+    }
+
+    @GetMapping("/retrieve")
+    public UserResponse retrieveUser(@RequestParam(name = "token") String token){
+        return jwtService.retrieveUser(token);
     }
 
     private URI getURI() {

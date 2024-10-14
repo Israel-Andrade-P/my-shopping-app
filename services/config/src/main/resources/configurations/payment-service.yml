@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/payments
+    username: zel
+    password: 123
+    jpa:
+      open-in-view: false
+      database-platform: org.hibernate.dialect.PostgreSQLInnoDBDialect
+      show-sql: true
+      hibernate:
+        ddl-auto: validate
+      properties:
+        hibernate:
+          globally_quoted_identifiers: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    baseline-description: "init"
+    baseline-version: 0
+    user: zel
+    password: 123
+server:
+  port: 8005

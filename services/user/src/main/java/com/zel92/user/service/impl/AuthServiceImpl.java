@@ -2,15 +2,9 @@ package com.zel92.user.service.impl;
 
 import com.zel92.user.cache.CacheStore;
 import com.zel92.user.dto.request.UserRequest;
-import com.zel92.user.entity.ConfirmationEntity;
-import com.zel92.user.entity.CredentialEntity;
-import com.zel92.user.entity.RoleEntity;
-import com.zel92.user.entity.UserEntity;
+import com.zel92.user.entity.*;
 import com.zel92.user.enumeration.LoginType;
-import com.zel92.user.exception.ConfirmationKeyExpiredException;
-import com.zel92.user.exception.CustomInvalidKeyException;
-import com.zel92.user.exception.RoleDoesntExistException;
-import com.zel92.user.exception.UserNotFoundException;
+import com.zel92.user.exception.*;
 import com.zel92.user.kafka.UserProducer;
 import com.zel92.user.model.User;
 import com.zel92.user.repository.*;
@@ -91,6 +85,12 @@ public class AuthServiceImpl implements AuthService {
     public CredentialEntity getCredentialByUserId(Long userId) {
         return credentialRepository.findByUserId(userId).orElseThrow(() -> new UserNotFoundException("User with ID: " + userId + " not found"));
     }
+
+    @Override
+    public LocationEntity getLocationByUserId(Long userId) {
+        return locationRepository.findByUserId(userId).orElseThrow(() -> new LocationNotFoundException("Location not found"));
+    }
+
 
     private void isKeyValid(ConfirmationEntity confirmationEntity) {
         if (confirmationEntity.getCreatedAt().plusMinutes(EXPIRATION).isBefore(now())){

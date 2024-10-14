@@ -23,4 +23,8 @@ public class User {
     private boolean enabled;
     private String role;
     private String authorities;
+
+    public String fullName(){
+        return firstName + " " + lastName;
+    }
 }

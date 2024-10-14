@@ -25,7 +25,7 @@ public class OrderController {
 
     @PostMapping("/order")
     public ResponseEntity<Response> placeOrder(@RequestBody @Valid OrderRequest order, HttpServletRequest request){
-        service.placeOrder(order);
+        service.placeOrder(order, request);
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), ORDER_PLACED, OK));
     }
 }

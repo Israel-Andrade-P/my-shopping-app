@@ -2,6 +2,8 @@ package com.zel92.user.utils;
 
 import com.zel92.user.domain.UserSecurity;
 import com.zel92.user.dto.request.UserRequest;
+import com.zel92.user.dto.response.UserResponse;
+import com.zel92.user.entity.LocationEntity;
 import com.zel92.user.entity.RoleEntity;
 import com.zel92.user.entity.UserEntity;
 import com.zel92.user.event.AccVerificationEvent;
@@ -64,6 +66,10 @@ public class UserUtils {
             user.setAuthorities(result.toString());
         });
         return user;
+    }
+
+    public static UserResponse toUserResponse(User user, LocationEntity location) {
+        return new UserResponse(user.fullName(), user.getEmail(), location.getCountry(), location.getCity(), location.getStreet(), location.getZipCode());
     }
 
     private static final Supplier<String> suppliesUserId = () -> {

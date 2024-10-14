@@ -26,5 +26,9 @@ client:
     url: http://localhost:8004
   product:
     url: http://localhost:8002
+  user:
+    url: http://localhost:8001
+  payment:
+    url: http://localhost:8005
 server:
   port: 8003
