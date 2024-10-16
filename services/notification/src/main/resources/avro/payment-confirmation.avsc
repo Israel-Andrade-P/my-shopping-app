@@ -1,0 +1,9 @@
+{
+   "type":"record",
+   "name":"PaymentConfEvent",
+   "namespace":"com.zel92.payment.event",
+   "fields": [
+      {"name":"fullName", "type":"string"},
+      {"name":"email", "type":"string"}
+   ]
+}

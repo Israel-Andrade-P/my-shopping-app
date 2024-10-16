@@ -1,6 +1,8 @@
 package com.zel92.payment.service.impl;
 
 import com.zel92.payment.dto.PaymentRequest;
+import com.zel92.payment.event.PaymentConfEvent;
+import com.zel92.payment.kafka.PaymentProducer;
 import com.zel92.payment.repository.PaymentRepository;
 import com.zel92.payment.service.PaymentService;
 import com.zel92.payment.utils.PaymentUtils;
@@ -13,9 +15,10 @@ import static com.zel92.payment.utils.PaymentUtils.*;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
+    private final PaymentProducer producer;
     @Override
     public void makeTransaction(PaymentRequest paymentRequest) {
         repository.save(buildPaymentEntity(paymentRequest));
-        //todo async communication with notification service through Kafka
+        producer.sendPaymentConfMessage(new PaymentConfEvent(paymentRequest.name(), paymentRequest.email()));
     }
 }
