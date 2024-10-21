@@ -22,9 +22,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/all")
-    //@PreAuthorize()
+//    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserResponse>> fetchAll(){
         return ResponseEntity.ok().body(userService.fetchAll());
+    }
+
+    @GetMapping("/user/{user-id}")
+    public ResponseEntity<UserResponse> fetchById(@PathVariable("user-id") String userId){
+        return ResponseEntity.ok().body(userService.fetchById(userId));
     }
 
     @DeleteMapping("/delete/{user-id}")

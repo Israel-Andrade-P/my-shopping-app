@@ -32,6 +32,7 @@ public class CustomAuthentication extends AbstractAuthenticationToken {
         this.user = user;
         this.email = EMAIL_PROTECTED;
         this.password = PASSWORD_PROTECTED;
+        this.authenticated = true;
     }
 
     public static CustomAuthentication unauthenticated(String email, String password){
