@@ -9,6 +9,8 @@ spring:
           uri: lb:http://USER-SERVICE
           predicates:
             - Path=/api/v1/auth/**, /api/v1/users/**
+          filters:
+            - TokenValidationFilter
         - id: product
           uri: lb:http://PRODUCT-SERVICE
           predicates:
@@ -21,6 +23,38 @@ spring:
             - Path=/api/v1/orders/**
           filters:
             - TokenValidationFilter
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      gatewayCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimum-number-of-calls: 5
+  timelimiter:
+    instances:
+      gatewayTimeLimiter:
+        timeout-duration: 3s
+  retry:
+    instances:
+      gatewayRetry:
+        max-attempts: 3
+        wait-duration: 2s
 server:
   port: 9000
 client:

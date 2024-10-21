@@ -69,7 +69,7 @@ public class UserUtils {
     }
 
     public static UserResponse toUserResponse(User user, LocationEntity location) {
-        return new UserResponse(user.fullName(), user.getEmail(), location.getCountry(), location.getCity(), location.getStreet(), location.getZipCode());
+        return new UserResponse(user.fullName(), user.getEmail(), user.getRole(), location.getCountry(), location.getCity(), location.getStreet(), location.getZipCode());
     }
 
     private static final Supplier<String> suppliesUserId = () -> {

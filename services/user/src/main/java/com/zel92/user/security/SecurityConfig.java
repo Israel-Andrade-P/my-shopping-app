@@ -1,10 +1,12 @@
 package com.zel92.user.security;
 
 import com.zel92.user.filters.AuthFilter;
+import com.zel92.user.filters.JwtCheckFilter;
 import com.zel92.user.service.JwtService;
 import com.zel92.user.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,6 +20,7 @@ import static com.zel92.user.constants.Constants.WHITE_LIST;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthService authService, JwtService jwtService, CustomAuthenticationManager manager) throws Exception {
@@ -27,6 +30,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(new AuthFilter(manager, authService, jwtService), AuthorizationFilter.class);
+        http.addFilterBefore(new JwtCheckFilter(authService, jwtService), AuthorizationFilter.class);
         return http.build();
     }
 
