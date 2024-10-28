@@ -11,6 +11,6 @@ public class EmailUtils {
     }
 
     private static String getAccVerificationUrl(String key) {
-        return "http://localhost:9000/api/v1/users/verify?key=" + key;
+        return "http://localhost:9000/api/v1/auth/verify?key=" + key;
     }
 }

@@ -24,5 +24,8 @@ spring:
 client:
   inventory:
     url: http://localhost:8004
+  user:
+    url: http://localhost:8001
+
 server:
   port: 8002

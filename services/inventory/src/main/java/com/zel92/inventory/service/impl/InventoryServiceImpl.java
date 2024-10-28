@@ -28,10 +28,10 @@ public class InventoryServiceImpl implements InventoryService {
         List<InventoryEntity> inventories = repository.findAllByProductIdInOrderByProductId(orderDTO.productIds());
         if (inventories.size() != orderDTO.productIds().size()) throw new ProductNotFoundException("Product doesn't exist");
 
-        return checkAvailability.apply(inventories, orderDTO);
+        return checkAvailability(inventories, orderDTO);
     }
 
-    private final BiFunction<List<InventoryEntity>, OrderDTO, ProductCheck> checkAvailability = (inventories, orderDTO) -> {
+    private ProductCheck checkAvailability(List<InventoryEntity> inventories, OrderDTO orderDTO) {
         var shoppingCart = new ArrayList<>();
         var productCheck = new ProductCheck();
         for (int i = 0; i < orderDTO.productIds().size(); i++){
@@ -39,6 +39,8 @@ public class InventoryServiceImpl implements InventoryService {
             var quantity = orderDTO.quantities().get(i);
             if (inventory.getQuantity() >= quantity) {
                 shoppingCart.add(inventory.getProductId());
+                inventory.setQuantity(inventory.getQuantity() - quantity);
+                repository.save(inventory);
             }else {
                 productCheck.getProductIds().add(inventory.getProductId());
             }

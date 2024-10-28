@@ -100,7 +100,8 @@ public class JwtServiceImpl extends JwtConfig implements JwtService {
         );
     }
     @Override
-    public Boolean validateToken(String jwt){
+    public Boolean validateToken(String jwt)
+    {
         return getTokenData(jwt, TokenData::getValid);
     }
 

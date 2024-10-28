@@ -57,7 +57,6 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        //SecurityContextHolder.getContext().setAuthentication(authentication);
         var user = fromUserSecurity((UserSecurity) authentication.getPrincipal());
         authService.updateLoginAttempt(user.getEmail(), LOGIN_SUCCESS);
         String token = jwtService.createToken(user, Token::getAccess);

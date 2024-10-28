@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,13 @@ public class GlobalExceptionHandler {
                 new ErrorResponse(404, HttpStatus.NOT_FOUND, exception.getMessage())
         );
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handle(AccessDeniedException exception){
+        return ResponseEntity.badRequest().body(
+                new ErrorResponse(403, HttpStatus.FORBIDDEN, exception.getMessage())
+        );
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handle(MethodArgumentNotValidException exception){
         HashMap<String, String> errors = new HashMap<>();
@@ -57,11 +65,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(404, HttpStatus.BAD_REQUEST, "Invalid fields", errors));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handle(Exception exception){
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "Oops! Something went wrong. An unexpected error has occurred: " + exception.getMessage())
-        );
-    }
+
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handle(Exception exception){
+//        return ResponseEntity.badRequest().body(
+//                new ErrorResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "Oops! Something went wrong. An unexpected error has occurred: " + exception.getMessage())
+//        );
+//    }
 
 }

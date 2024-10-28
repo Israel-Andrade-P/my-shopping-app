@@ -2,6 +2,7 @@ package com.zel92.user.utils;
 
 import com.zel92.user.domain.UserSecurity;
 import com.zel92.user.dto.request.UserRequest;
+import com.zel92.user.dto.response.UserInfoResp;
 import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.entity.LocationEntity;
 import com.zel92.user.entity.RoleEntity;
@@ -82,4 +83,8 @@ public class UserUtils {
         }
         return builder.toString();
     };
+
+    public static UserInfoResp toUserInfoResp(UserEntity userEntity) {
+        return new UserInfoResp(userEntity.getUserId(), userEntity.fullName(), userEntity.getEmail(), userEntity.getRole().getAuthority().getValue());
+    }
 }

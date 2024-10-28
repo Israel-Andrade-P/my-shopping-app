@@ -4,6 +4,7 @@ import com.zel92.product.domain.Response;
 import com.zel92.product.dto.OrderDTO;
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
+import com.zel92.product.exception.AuthorizationFailedException;
 import com.zel92.product.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -29,8 +30,8 @@ public class ProductController {
     private final ProductService service;
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addProduct(@RequestBody @Valid ProductRequest product, HttpServletRequest request){
-        service.createProduct(product);
+    public ResponseEntity<Response> addProduct(@RequestBody @Valid ProductRequest product, HttpServletRequest request) throws AuthorizationFailedException {
+        service.createProduct(product, request);
         return ResponseEntity.created(getUri()).body(getResponse(request, emptyMap(), PRODUCT_ADDED, CREATED));
     }
 
@@ -39,9 +40,14 @@ public class ProductController {
         return ResponseEntity.ok().body(service.findByProductId(productId));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@RequestParam(name = "category") String category){
+        return ResponseEntity.ok().body(service.findByCategory(category));
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteProductById(@PathVariable("id") String productId, HttpServletRequest request){
-        service.deleteProduct(productId);
+    public ResponseEntity<Response> deleteProductById(@PathVariable("id") String productId, HttpServletRequest request) throws AuthorizationFailedException {
+        service.deleteProduct(productId, request);
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), PRODUCT_DELETED, OK));
     }
 

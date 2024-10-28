@@ -13,9 +13,12 @@ public class UserSecurity implements UserDetails {
     @Getter
     private final User user;
     private final CredentialEntity credential;
+    @Getter
+    private final String role;
     public UserSecurity(User user, CredentialEntity credential){
         this.user = user;
         this.credential = credential;
+        this.role = user.getRole();
     }
 
     @Override

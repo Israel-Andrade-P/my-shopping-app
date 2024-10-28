@@ -1,16 +1,20 @@
 package com.zel92.user.controller;
 
 import com.zel92.user.domain.Response;
+import com.zel92.user.dto.request.UserRequest;
+import com.zel92.user.dto.response.UserInfoResp;
 import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Collections.emptyMap;
 import static org.springframework.http.HttpStatus.OK;
@@ -21,15 +25,18 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/all")
-//    @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<UserResponse>> fetchAll(){
-        return ResponseEntity.ok().body(userService.fetchAll());
+    @GetMapping("/user/{user-id}")
+//    @PostAuthorize("returnObject.email == authentication.principal.email")
+    public UserInfoResp fetchById(@PathVariable("user-id") String userId){
+        return userService.fetchById(userId);
     }
 
-    @GetMapping("/user/{user-id}")
-    public ResponseEntity<UserResponse> fetchById(@PathVariable("user-id") String userId){
-        return ResponseEntity.ok().body(userService.fetchById(userId));
+    @PutMapping("/update/{user-id}")
+    public ResponseEntity<Response> updateUser(@PathVariable("user-id") String userId,
+                                               @RequestBody UserRequest user,
+                                               HttpServletRequest request){
+        userService.updateUser(userId, user);
+        return ResponseEntity.ok().body(RequestUtils.getResponse(request, emptyMap(), "User has been updated successfully!", OK));
     }
 
     @DeleteMapping("/delete/{user-id}")
