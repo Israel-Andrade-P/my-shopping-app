@@ -14,6 +14,7 @@ import com.zel92.product.repository.CategoryRepository;
 import com.zel92.product.repository.ProductRepository;
 import com.zel92.product.service.ProductService;
 import com.zel92.product.utils.ProductUtils;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,31 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> findByCategory(String category) {
         var categoryEntity = getCategoryByType(category);
         return productRepository.findAllByCategory(categoryEntity).stream().map(ProductUtils::fromProductEntity).toList();
+    }
+
+    @Override
+    public void updateProduct(ProductRequest product, String productId, HttpServletRequest request) throws AuthorizationFailedException {
+        if (checkAuthStatus(request)){
+            var productDB = getProductEntityById(productId);
+
+            if (StringUtils.isNotBlank(product.name())){
+                productDB.setName(product.name());
+            }
+            if (StringUtils.isNotBlank(product.description())){
+                productDB.setDescription(product.description());
+            }
+            if (StringUtils.isNotBlank(product.category())){
+                var categoryEntity = getCategoryByType(product.category());
+                productDB.setCategory(categoryEntity);
+            }
+
+            if (product.price() != null){
+                productDB.setPrice(product.price());
+            }
+
+            productRepository.save(productDB);
+        }else throw new AuthorizationFailedException("You don't have enough permission for that");
+
     }
 
     private ProductEntity getProductEntityById(String productId) {

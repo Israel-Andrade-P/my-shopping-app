@@ -17,4 +17,6 @@ public interface ProductService {
     List<BigDecimal> getPrice(OrderDTO orderDTO);
 
     List<ProductResponse> findByCategory(String category);
+
+    void updateProduct(ProductRequest product, String productId, HttpServletRequest request) throws AuthorizationFailedException;
 }

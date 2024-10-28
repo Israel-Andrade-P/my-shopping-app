@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
-import static com.zel92.product.constants.Constants.PRODUCT_ADDED;
-import static com.zel92.product.constants.Constants.PRODUCT_DELETED;
+import static com.zel92.product.constants.Constants.*;
 import static com.zel92.product.utils.RequestUtils.getResponse;
 import static java.util.Collections.emptyMap;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -43,6 +42,14 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(@RequestParam(name = "category") String category){
         return ResponseEntity.ok().body(service.findByCategory(category));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Response> updateProductById(@RequestBody ProductRequest product,
+                                                      @PathVariable("id") String productId,
+                                                      HttpServletRequest request) throws AuthorizationFailedException {
+        service.updateProduct(product, productId, request);
+        return ResponseEntity.ok().body(getResponse(request, emptyMap(), PRODUCT_UPDATED, OK));
     }
 
     @DeleteMapping("/delete/{id}")
