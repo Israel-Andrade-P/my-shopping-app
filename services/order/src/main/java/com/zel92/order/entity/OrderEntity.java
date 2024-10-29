@@ -26,6 +26,8 @@ public class OrderEntity {
     private Long id;
     @Column(name = "order_id", unique = true)
     private String orderId = UUID.randomUUID().toString();
+    @Column(name = "user_id", nullable = false)
+    private String userId;
     private BigDecimal totalAmount;
     private String clientName;
     @CreatedDate
@@ -37,7 +39,8 @@ public class OrderEntity {
     @OneToMany
     private List<OrderedItem> orderedProducts;
 
-    public OrderEntity(String clientName, BigDecimal totalAmount){
+    public OrderEntity(String userId, String clientName, BigDecimal totalAmount){
+        this.userId = userId;
         this.clientName = clientName;
         this.totalAmount = totalAmount;
     }

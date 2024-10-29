@@ -1,4 +1,4 @@
-package com.zel92.product.exception;
+package com.zel92.order.exception;
 
 public class AuthorizationFailedException extends RuntimeException {
     public AuthorizationFailedException(String message) {

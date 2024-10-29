@@ -4,6 +4,7 @@ import com.zel92.order.entity.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
@@ -13,4 +14,11 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
                     """
     )
     Optional<OrderEntity> findByOrderId(String orderId);
+
+    @Query(
+            """
+                    SELECT o FROM OrderEntity o WHERE o.userId=:userId
+                    """
+    )
+    List<OrderEntity> findByUserId(String userId);
 }

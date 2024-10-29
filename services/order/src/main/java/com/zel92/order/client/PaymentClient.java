@@ -16,6 +16,7 @@ public interface PaymentClient {
     void persistTransaction(@RequestBody PaymentDTO dto);
 
     default void fallback(PaymentDTO dto, Throwable throwable){
+        System.out.println("Payment service is down");
         throw new ServerDownException("Server is currently unavailable. So you are receiving this as a fallback message");
     }
 }

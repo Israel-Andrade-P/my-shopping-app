@@ -1,5 +1,6 @@
 package com.zel92.order.handler;
 
+import com.zel92.order.exception.AuthorizationFailedException;
 import com.zel92.order.exception.PaymentServiceDownException;
 import com.zel92.order.exception.ProductNotAvailableException;
 import com.zel92.order.exception.ServerDownException;
@@ -9,8 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,6 +18,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotAvailableException.class)
     public ResponseEntity<ErrorResponse> handle(ProductNotAvailableException exp){
         return ResponseEntity.status(BAD_REQUEST).body(new ErrorResponse(400, BAD_REQUEST, exp.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationFailedException.class)
+    public ResponseEntity<ErrorResponse> handle(AuthorizationFailedException exp){
+        return ResponseEntity.status(FORBIDDEN).body(new ErrorResponse(403, FORBIDDEN, exp.getMessage()));
     }
 
     @ExceptionHandler(ServerDownException.class)
