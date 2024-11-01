@@ -15,6 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import static com.zel92.user.constants.Constants.WHITE_LIST;
 
@@ -22,18 +27,28 @@ import static com.zel92.user.constants.Constants.WHITE_LIST;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource(){
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+//        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthService authService, JwtService jwtService, CustomAuthenticationManager manager) throws Exception {
         http.authorizeHttpRequests(request ->
                 request.requestMatchers(WHITE_LIST).permitAll()
                         .anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable);
+//        http.cors(c -> c.configurationSource(corsConfigurationSource()));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(new AuthFilter(manager, authService, jwtService), AuthorizationFilter.class);
         http.addFilterBefore(new JwtCheckFilter(authService, jwtService), AuthorizationFilter.class);
         return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

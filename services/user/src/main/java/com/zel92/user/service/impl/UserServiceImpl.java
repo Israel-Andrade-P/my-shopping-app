@@ -99,7 +99,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private Boolean checkAuthStatus(String userId) {
-
         var user = getUserEntityByUserId(userId);
         var auth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();

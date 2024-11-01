@@ -23,7 +23,7 @@ import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final CredentialRepository credentialRepository;
     private final ConfirmationRepository confirmationRepository;
