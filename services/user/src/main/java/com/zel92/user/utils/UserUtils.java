@@ -59,6 +59,7 @@ public class UserUtils {
     public static User fromUserSecurity(UserSecurity userSecurity){
         var stringBuilder = new StringBuilder();
         var user = User.builder()
+                .userId(userSecurity.getUser().getUserId())
                 .email(userSecurity.getUsername())
                 .role(userSecurity.getUser().getRole())
                 .build();

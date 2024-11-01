@@ -5,6 +5,8 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const [jwt, setJwt] = useState("");
+    const [id, setId] = useState("");
+    const [profile, setProfile] = useState(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,8 +25,34 @@ const Login = () => {
                 console.log(data);
                 setJwt(data.token)
                 setMessage("Login Successful");
+                setId(data.userId)
+                getUserProfile(data.token, data.userId)
             } else {
                 setMessage("Username and/or password is incorrect")
+            }
+
+        } catch (error) {
+            console.log("Oops! An error has occurred: " + error)
+            setMessage("Something went wrong. Please try again")
+        }
+    }
+
+    const getUserProfile = async (token, userId) => {
+        try {
+            const response = await fetch("http://localhost:9000/api/v1/users/user/" + userId,{
+                method:"GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`, 
+                },
+            }
+            );
+
+            if (response.ok){
+                const data = await response.json();
+                console.log(data);
+                setProfile(data);
+            } else {
+                setMessage("User profile unavailable.")
             }
 
         } catch (error) {
@@ -35,7 +63,8 @@ const Login = () => {
     
     return (
         <div>
-            <h2>Login</h2>
+
+            {!profile ? (
             <form onSubmit={handleLogin}>
                 <div>
                     <label>Username: </label>
@@ -45,8 +74,17 @@ const Login = () => {
                 </div>
                 <button type="submit">Login</button>
             </form>
-            {message && <p>{message}</p>}
-            {jwt && <p>{jwt}</p>}
+            ) : (
+                <div>
+                    <h3>User Profile</h3>
+                    <p>User ID: {profile.userId}</p>
+                    <p>Name: {profile.name}</p>
+                    <p>Email: {profile.email}</p>
+                    <p>Authorities: {profile.authorities}</p>
+                </div>    
+            )}
+             {message && <p>{message}</p>}
+             {jwt && <p>{jwt}</p>}
         </div>
     )
 }

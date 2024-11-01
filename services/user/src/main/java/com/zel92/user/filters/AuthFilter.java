@@ -61,7 +61,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
         var user = fromUserSecurity((UserSecurity) authentication.getPrincipal());
         authService.updateLoginAttempt(user.getEmail(), LOGIN_SUCCESS);
         String token = jwtService.createToken(user, Token::getAccess);
-        var loginResponse = new LoginResponse(token);
+        var loginResponse = new LoginResponse(token, user.getUserId());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.OK.value());
         var out = response.getOutputStream();
