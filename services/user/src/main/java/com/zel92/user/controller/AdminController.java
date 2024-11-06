@@ -1,10 +1,12 @@
 package com.zel92.user.controller;
 
+import com.zel92.user.constants.Constants;
 import com.zel92.user.domain.Response;
 import com.zel92.user.dto.request.UserRequest;
 import com.zel92.user.dto.response.UserInfoResp;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.RequestUtils;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('user:delete')")
+@SecurityRequirement(name = Constants.SECURITY)
 public class AdminController {
     private final UserService service;
 

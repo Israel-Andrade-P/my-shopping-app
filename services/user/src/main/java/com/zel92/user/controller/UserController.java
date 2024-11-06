@@ -1,11 +1,13 @@
 package com.zel92.user.controller;
 
+import com.zel92.user.constants.Constants;
 import com.zel92.user.domain.Response;
 import com.zel92.user.dto.request.UserRequest;
 import com.zel92.user.dto.response.UserInfoResp;
 import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.RequestUtils;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = Constants.SECURITY)
 public class UserController {
     private final UserService userService;
 

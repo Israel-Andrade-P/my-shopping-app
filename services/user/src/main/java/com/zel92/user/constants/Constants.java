@@ -14,7 +14,11 @@ public class Constants {
     public static final String EMAIL_PROTECTED = "EMAIL_PROTECTED";
     public static final String PASSWORD_PROTECTED = "PASSWORD_PROTECTED";
     public static final String LOGIN_PATH = "/api/v1/auth/login";
-    public static final String[] WHITE_LIST = {"/api/v1/auth/register", "/api/v1/auth/verify", "/api/v1/auth/login", "/api/v1/auth/validate", "/api/v1/auth/retrieve"};
+    public static final String[] WHITE_LIST =
+            {"/api/v1/auth/register", "/api/v1/auth/verify", "/api/v1/auth/login", "/api/v1/auth/validate",
+            "/api/v1/auth/retrieve", "/v3/api-docs/**","/swagger-ui/**", "swagger-ui.html", "/api-docs/**",
+            "/swagger-resources/**", "/aggregate/**"};
+    public static final String SECURITY = "bearerAuth";
     public static final String ACCOUNT_CREATED_MESSAGE = "Your account has been created successfully. Please check your email to enable your account.";
     public static final String ACCOUNT_VERIFIED_MESSAGE = "Your account has been verified";
 }

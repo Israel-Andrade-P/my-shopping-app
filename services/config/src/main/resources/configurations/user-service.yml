@@ -30,6 +30,12 @@ spring:
         schema:
           registry:
             url: http://127.0.0.1:8085
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+
 jwt:
   secret: cHJpemVjbGltYmVsc2V3aXRobmVnYXRpdmV0b3NhZmV0eWZyZXF1ZW50bHlkb29ydXBwZXJtb3Rpb25pbmNyZWFzZXBsYWluc3Rp
   expiration: 1800

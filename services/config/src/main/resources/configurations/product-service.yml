@@ -21,6 +21,11 @@ spring:
     baseline-version: 0
     user: zel
     password: 123
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
 client:
   inventory:
     url: http://localhost:8004

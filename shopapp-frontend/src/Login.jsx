@@ -60,6 +60,14 @@ const Login = () => {
             setMessage("Something went wrong. Please try again")
         }
     }
+
+    const handleLogout = () => {
+        setEmail("");
+        setPassword("");
+        setJwt("");
+        setProfile(null);
+        setMessage("You are logged out");
+    }
     
     return (
         <div>
@@ -81,6 +89,7 @@ const Login = () => {
                     <p>Name: {profile.name}</p>
                     <p>Email: {profile.email}</p>
                     <p>Authorities: {profile.authorities}</p>
+                    <button onClick={handleLogout}>Logout</button>
                 </div>    
             )}
              {message && <p>{message}</p>}
