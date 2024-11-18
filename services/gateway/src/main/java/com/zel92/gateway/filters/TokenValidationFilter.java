@@ -5,7 +5,14 @@ import com.zel92.gateway.exception.HeaderNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Component
@@ -24,8 +31,16 @@ public class TokenValidationFilter extends AbstractGatewayFilterFactory<TokenVal
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())){
-                if (!exchange.getRequest().getHeaders().containsKey(AUTHORIZATION)){
-                    throw new HeaderNotFoundException("No Authorization header in the request");
+                try {
+                    if (!exchange.getRequest().getHeaders().containsKey(AUTHORIZATION)){
+                        throw new HeaderNotFoundException("No Authorization header in the request");
+                    }
+                }catch (HeaderNotFoundException exp){
+                    ServerHttpResponse response = exchange.getResponse();
+                    response.setStatusCode(HttpStatus.BAD_REQUEST);
+                    response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
+                    DataBuffer responseBuffer = response.bufferFactory().wrap(exp.getMessage().getBytes(StandardCharsets.UTF_8));
+                    return response.writeWith(Mono.just(responseBuffer));
                 }
                 String authHeader = exchange.getRequest().getHeaders().get(AUTHORIZATION).get(0);
                 if (authHeader != null && authHeader.startsWith("Bearer ")){

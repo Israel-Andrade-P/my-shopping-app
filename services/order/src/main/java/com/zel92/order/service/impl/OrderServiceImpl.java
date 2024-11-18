@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 
 import static com.zel92.order.utils.OrderUtils.*;
@@ -40,18 +41,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(OrderRequest orderReq, HttpServletRequest request) {
-        var user = getUser.apply(userClient, request);
+        var userFuture = getUserFuture.apply(userClient, request);
 
         List<OrderedItemRequest> sorted = orderReq.orderedItems().stream().sorted(Comparator.comparing(OrderedItemRequest::productId)).toList();
         List<String> productIds = sorted.stream().map(OrderedItemRequest::productId).toList();
         List<Integer> quantities = sorted.stream().map(OrderedItemRequest::quantity).toList();
         var orderDTO = OrderDTO.builder().productIds(productIds).quantities(quantities).build();
-            var productCheck = inventoryClient.checkStock(orderDTO);
+            var productCheckFuture = callInvService(orderDTO);
+            var productCheck = (ProductCheck) CompletableFuture.anyOf(productCheckFuture).join();
             if (!productCheck.getIsInStock()){
                 throw new ProductNotAvailableException("Products with IDs: " + productCheck.getProductIds() + " are not available");
             }
-        List<BigDecimal> prices = productClient.getPrice(orderDTO);
+           CompletableFuture<List<BigDecimal>> pricesFuture = callProdService(orderDTO);
+           var prices = (List<BigDecimal>) CompletableFuture.anyOf(pricesFuture).join();
         var totalAmount = calculateTotalAmount.apply(prices, quantities);
+        var user = (UserResponse) CompletableFuture.anyOf(userFuture).join();
         OrderEntity order = orderRepository.save(buildOrderEntity(user, totalAmount));
 
         persistOrderedItems(productIds, prices, quantities, order);
@@ -118,4 +122,19 @@ public class OrderServiceImpl implements OrderService {
         var jwt = request.getHeader(AUTHORIZATION).substring(7);
         return client.retrieveUser(jwt);
     };
+
+    private final BiFunction<UserClient, HttpServletRequest, CompletableFuture<UserResponse>> getUserFuture = (client, request) ->
+            CompletableFuture.supplyAsync(() -> {
+            var jwt = request.getHeader(AUTHORIZATION).substring(7);
+            return client.retrieveUser(jwt);
+        });
+
+    private CompletableFuture<ProductCheck> callInvService(OrderDTO orderDTO){
+        return CompletableFuture.supplyAsync(() -> inventoryClient.checkStock(orderDTO));
+    }
+
+    private CompletableFuture<List<BigDecimal>> callProdService(OrderDTO orderDTO){
+        return CompletableFuture.supplyAsync(() -> productClient.getPrice(orderDTO));
+    }
+
 }

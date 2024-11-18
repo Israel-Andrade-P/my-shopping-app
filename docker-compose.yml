@@ -104,6 +104,14 @@ services:
     networks:
       - shop-network
 
+  zipkin:
+    container_name: zipkin
+    image: 'openzipkin/zipkin:latest'
+    ports:
+      - "9411:9411"
+    networks:
+      - shop-network
+
   maildev:
     image: maildev/maildev
     container_name: mail-dev

@@ -52,6 +52,7 @@ public class AuthController {
         return jwtService.retrieveUser(token);
     }
 
+
     private URI getURI() {
         return URI.create("");
     }

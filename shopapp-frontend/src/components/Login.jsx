@@ -68,6 +68,14 @@ const Login = () => {
         setProfile(null);
         setMessage("You are logged out");
     }
+
+    const googleLogin = () => {
+        window.location.href = "http://localhost:8085/users/oauth2/authorization/google"
+    };
+
+    const githubLogin = () => {
+        window.location.href = "http://localhost:8001/users/oauth2/authorization/github"
+    };
     
     return (
         <div>
@@ -80,7 +88,9 @@ const Login = () => {
                     <label>Password: </label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}/><br/><br/>
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit">Login</button><br/><br/>
+                <button onClick={googleLogin}>Login with Google</button><br/><br/>
+                <button onClick={githubLogin}>Login with GitHub</button>
             </form>
             ) : (
                 <div>
