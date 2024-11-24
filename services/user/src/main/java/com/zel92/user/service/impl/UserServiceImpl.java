@@ -94,8 +94,7 @@ public class UserServiceImpl implements UserService {
 //            userDB.setDob(user.dob());
 //        }
             userRepository.save(userDB);
-        }
-        throw new AccessDeniedException("You don't have enough permission for that");
+        } else throw new AccessDeniedException("You don't have enough permission for that");
     }
 
     private Boolean checkAuthStatus(String userId) {
