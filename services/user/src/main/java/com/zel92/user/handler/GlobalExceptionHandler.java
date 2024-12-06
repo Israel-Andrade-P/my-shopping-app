@@ -1,9 +1,7 @@
 package com.zel92.user.handler;
 
-import com.zel92.user.exception.ConfirmationKeyExpiredException;
-import com.zel92.user.exception.CustomInvalidKeyException;
-import com.zel92.user.exception.RoleDoesntExistException;
-import com.zel92.user.exception.UserNotFoundException;
+import com.zel92.user.exception.*;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -29,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomInvalidKeyException.class)
     public ResponseEntity<ErrorResponse> handle(CustomInvalidKeyException exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(401, HttpStatus.BAD_REQUEST, exception.getMessage())
+                new ErrorResponse(400, HttpStatus.BAD_REQUEST, exception.getMessage())
         );
     }
 
@@ -47,8 +45,8 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handle(AccessDeniedException exception){
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<ErrorResponse> handle(PermissionDeniedException exception){
         return ResponseEntity.badRequest().body(
                 new ErrorResponse(403, HttpStatus.FORBIDDEN, exception.getMessage())
         );
@@ -62,7 +60,14 @@ public class GlobalExceptionHandler {
             var message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(404, HttpStatus.BAD_REQUEST, "Invalid fields", errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(400, HttpStatus.BAD_REQUEST, "Invalid fields", errors));
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> handle(MalformedJwtException exception){
+        return ResponseEntity.status(401).body(
+                new ErrorResponse(401, HttpStatus.UNAUTHORIZED, exception.getMessage())
+        );
     }
 
 

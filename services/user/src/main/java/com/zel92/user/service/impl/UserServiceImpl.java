@@ -8,6 +8,7 @@ import com.zel92.user.entity.LocationEntity;
 import com.zel92.user.entity.RoleEntity;
 import com.zel92.user.entity.UserEntity;
 import com.zel92.user.exception.LocationNotFoundException;
+import com.zel92.user.exception.PermissionDeniedException;
 import com.zel92.user.exception.RoleDoesntExistException;
 import com.zel92.user.exception.UserNotFoundException;
 import com.zel92.user.model.User;
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
         if (checkAuthStatus(userId)){
             userRepository.delete(userEntity);
         }
-        throw new AccessDeniedException("You don't have enough permission for that");
+        throw new PermissionDeniedException("You don't have enough permission for that");
     }
 
     @Override
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
             return UserUtils.toUserInfoResp(user);
         }
 
-        throw new AccessDeniedException("You don't have enough permission for that");
+        throw new PermissionDeniedException("You don't have enough permission for that");
     }
 
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
 //            userDB.setDob(user.dob());
 //        }
             userRepository.save(userDB);
-        } else throw new AccessDeniedException("You don't have enough permission for that");
+        } else throw new PermissionDeniedException("You don't have enough permission for that");
     }
 
     private Boolean checkAuthStatus(String userId) {
@@ -104,11 +105,8 @@ public class UserServiceImpl implements UserService {
         if (authorities.contains("user:delete")){
             return true;
         }else {
-            if (Objects.equals(user.getEmail(), auth.getEmail())){
-                return true;
-            }
+            return Objects.equals(user.getEmail(), auth.getEmail());
         }
-        return false;
     }
 
     private UserEntity getUserEntityByUserId(String userId) {

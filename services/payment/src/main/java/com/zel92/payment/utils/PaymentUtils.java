@@ -23,7 +23,7 @@ public class PaymentUtils {
         return Arrays.stream(PaymentMethod.values())
                 .filter(payMeth -> Objects.equals(payMeth.getMethod(), method))
                 .findFirst()
-                .orElseThrow(() -> new InvalidPaymentMethodException("Payment method not supported"))
+                .orElseThrow(() -> new InvalidPaymentMethodException("Payment method not supported")) //catch it!!
                 .getMethod();
     };
 

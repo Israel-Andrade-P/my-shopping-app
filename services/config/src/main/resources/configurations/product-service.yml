@@ -21,6 +21,27 @@ spring:
     baseline-version: 0
     user: zel
     password: 123
+resilience4j:
+  circuitbreaker:
+    instances:
+      productCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimum-number-of-calls: 5
+  timelimiter:
+    instances:
+      orderTimeLimiter:
+        timeout-duration: 3s
+  retry:
+    instances:
+      orderRetry:
+        max-attempts: 3
+        wait-duration: 2s
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

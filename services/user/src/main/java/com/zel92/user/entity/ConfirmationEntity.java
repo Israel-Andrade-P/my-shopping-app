@@ -23,7 +23,8 @@ import static com.zel92.user.constants.Constants.*;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ConfirmationEntity extends BaseEntity{
-    private String key;
+    @Column(name = "key_code")
+    private String keyCode;
     @OneToOne(targetEntity = UserEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -33,6 +34,6 @@ public class ConfirmationEntity extends BaseEntity{
 
     public ConfirmationEntity(UserEntity user, String key){
         this.user = user;
-        this.key = key;
+        this.keyCode = key;
     }
 }

@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
+
+import static org.springframework.security.core.authority.AuthorityUtils.*;
 
 public class UserSecurity implements UserDetails {
     @Getter
@@ -15,15 +18,28 @@ public class UserSecurity implements UserDetails {
     private final CredentialEntity credential;
     @Getter
     private final String role;
+    private final String username;
+    private final List<? extends GrantedAuthority> authorities;
+
     public UserSecurity(User user, CredentialEntity credential){
         this.user = user;
         this.credential = credential;
         this.role = user.getRole();
+        this.username = user.getEmail();
+        authorities = null;
+    }
+
+    public UserSecurity(String username, List<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.authorities = authorities;
+        user = null;
+        credential = null;
+        role = "USER";
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthorities());
+        return user != null ? commaSeparatedStringToAuthorityList(user.getAuthorities()) : authorities;
     }
 
     @Override
@@ -33,7 +49,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getEmail();
+        return user != null ? this.user.getEmail() : this.username;
     }
 
     @Override

@@ -22,8 +22,8 @@ import static java.time.LocalDateTime.now;
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public abstract class BaseEntity {
     @Id
-    @SequenceGenerator(name = "primary_key_seq", sequenceName = "primary_key_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_seq")
     @Column(name = "id", updatable = false)
     private Long id;
     private String referenceId = new AlternativeJdkIdGenerator().generateId().toString();
@@ -44,9 +44,9 @@ public abstract class BaseEntity {
         var userId = 0L;//RequestContext.getUserId();
         //if (userId == null) {throw new ApiException("Cannot persist entity without user ID in Request Context for this thread");}
         setCreatedAt(now());
-        setCreatedBy(Long.valueOf(userId));
+        setCreatedBy(userId);
         setUpdatedAt(now());
-        setUpdatedBy(Long.valueOf(userId));
+        setUpdatedBy(userId);
     }
 
     @PreUpdate

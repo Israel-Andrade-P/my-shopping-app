@@ -44,7 +44,7 @@ public class SecurityConfig {
 //        http.oauth2Login(oauth -> oauth.defaultSuccessUrl("http://localhost:5173/dashboard", true));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(new AuthFilter(manager, authService, jwtService), AuthorizationFilter.class);
-        http.addFilterBefore(new JwtCheckFilter(authService, jwtService), AuthorizationFilter.class);
+        http.addFilterBefore(new JwtCheckFilter(jwtService), AuthorizationFilter.class);
         return http.build();
     }
     @Bean

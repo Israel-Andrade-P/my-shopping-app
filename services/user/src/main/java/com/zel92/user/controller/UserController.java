@@ -4,22 +4,13 @@ import com.zel92.user.constants.Constants;
 import com.zel92.user.domain.Response;
 import com.zel92.user.dto.request.UserRequest;
 import com.zel92.user.dto.response.UserInfoResp;
-import com.zel92.user.dto.response.UserResponse;
 import com.zel92.user.service.UserService;
 import com.zel92.user.utils.RequestUtils;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 import static java.util.Collections.emptyMap;
 import static org.springframework.http.HttpStatus.OK;

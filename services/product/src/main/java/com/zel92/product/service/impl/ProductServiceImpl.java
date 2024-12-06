@@ -5,6 +5,7 @@ import com.zel92.product.client.UserClient;
 import com.zel92.product.dto.OrderDTO;
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
+import com.zel92.product.dto.response.UserResponse;
 import com.zel92.product.entity.CategoryEntity;
 import com.zel92.product.entity.ProductEntity;
 import com.zel92.product.exception.AuthorizationFailedException;
@@ -24,6 +25,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
+import static com.zel92.product.utils.ProductUtils.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -34,8 +37,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void createProduct(ProductRequest product, HttpServletRequest request) throws AuthorizationFailedException {
-        if (checkAuthStatus(request)){
-            ProductEntity productEntity = productRepository.save(createNewProductEntity(product));
+        var user = getUser(request);
+        if (checkAuthStatus(user)){
+            ProductEntity productEntity = productRepository.save(createNewProductEntity(product, user));
             inventoryClient.persist(productEntity.getProductId(), product.quantity());
         }else throw new AuthorizationFailedException("You don't have enough permission for that");
     }
@@ -43,12 +47,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse findByProductId(String productId) {
         ProductEntity productEntity = getProductEntityById(productId);
-        return ProductUtils.fromProductEntity(productEntity);
+        return fromProductEntity(productEntity);
     }
 
     @Override
     public void deleteProduct(String productId, HttpServletRequest request) throws AuthorizationFailedException {
-        if (checkAuthStatus(request)){
+        if (checkAuthStatus(getUser(request))){
             var product = getProductEntityById(productId);
             productRepository.delete(product);
         }else throw new AuthorizationFailedException("You don't have enough permission for that");
@@ -67,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(ProductRequest product, String productId, HttpServletRequest request) throws AuthorizationFailedException {
-        if (checkAuthStatus(request)){
+        if (checkAuthStatus(getUser(request))){
             var productDB = getProductEntityById(productId);
 
             if (StringUtils.isNotBlank(product.name())){
@@ -96,19 +100,39 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID: " + productId + " not found"));
     }
 
-    private ProductEntity createNewProductEntity(ProductRequest product) {
+    private ProductEntity createNewProductEntity(ProductRequest product, UserResponse user) {
         CategoryEntity category = getCategoryByType(product.category());
-        return ProductUtils.buildProductEntity(product, category);
+        return buildProductEntity(product, category, user);
     }
 
     private CategoryEntity getCategoryByType(String type) {
         return categoryRepository.findByType(type).orElseThrow(() -> new CategoryNotFoundException("Category not found"));
     }
 
-    private Boolean checkAuthStatus(HttpServletRequest request){
-        var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
-        var user = userClient.retrieveUser(token);
+    private Boolean checkAuthStatus(UserResponse user){
         return Objects.equals(user.role(), "SUPER_ADMIN");
+    }
+
+    private UserResponse getUser(HttpServletRequest request){
+        var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
+        return userClient.retrieveUser(token);
+    }
+
+    //Methods created for Testing Practice, please delete these methods bellow after done messing around with Unit Testing
+
+    public ProductEntity addProduct(ProductEntity product){
+        if (validateProductName(product.getName())){
+            return productRepository.save(product);
+        }
+        throw new RuntimeException("Invalid name");
+    }
+
+    public void delete(Long id){
+        productRepository.deleteById(id);
+    }
+
+    private boolean validateProductName(String name){
+        return name != null && !name.isEmpty();
     }
 
 }

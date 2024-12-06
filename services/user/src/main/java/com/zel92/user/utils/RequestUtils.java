@@ -35,8 +35,8 @@ public class RequestUtils {
     };
 
     private static final BiFunction<Exception, HttpStatus, String> errorReason = (exception, status) -> {
-        if (status.isSameCodeAs(FORBIDDEN)) {return "You do not have enough permission";}
-        if (status.isSameCodeAs(UNAUTHORIZED)) {return "You are not logged in";}
+        //if (status.isSameCodeAs(FORBIDDEN)) {return "You do not have enough permission";}
+        if (status.isSameCodeAs(UNAUTHORIZED)) {return "Email and/or Password incorrect";}
         if (exception instanceof DisabledException || exception instanceof LockedException || exception instanceof BadCredentialsException || exception instanceof GenericException){
             return exception.getMessage();
         }
@@ -53,6 +53,11 @@ public class RequestUtils {
             Response apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
             writeResponse.accept(response, apiResponse);
     }
+
+//    private static HttpStatus getHttpStatus(Exception exception){
+//        if (exception instanceof BadCredentialsException) return UNAUTHORIZED;
+//        return FORBIDDEN;
+//    }
 
     private static Response getErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception, HttpStatus status) {
         response.setContentType(APPLICATION_JSON_VALUE);

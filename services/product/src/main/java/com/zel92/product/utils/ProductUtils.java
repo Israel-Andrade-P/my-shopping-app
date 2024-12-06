@@ -2,6 +2,7 @@ package com.zel92.product.utils;
 
 import com.zel92.product.dto.request.ProductRequest;
 import com.zel92.product.dto.response.ProductResponse;
+import com.zel92.product.dto.response.UserResponse;
 import com.zel92.product.entity.CategoryEntity;
 import com.zel92.product.entity.ProductEntity;
 
@@ -9,13 +10,13 @@ import java.security.SecureRandom;
 import java.util.function.Supplier;
 
 public class ProductUtils {
-    public static ProductEntity buildProductEntity(ProductRequest product, CategoryEntity category) {
+    public static ProductEntity buildProductEntity(ProductRequest product, CategoryEntity category, UserResponse user) {
         return ProductEntity.builder()
                 .productId(supplyProductId.get())
                 .name(product.name())
                 .description(product.description())
                 .price(product.price())
-                .ownerId(null)
+                .ownerId(user.userId())
                 .category(category)
                 .build();
     }

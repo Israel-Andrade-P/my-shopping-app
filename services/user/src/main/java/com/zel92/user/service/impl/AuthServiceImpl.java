@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService{
         ConfirmationEntity confirmation = confirmationRepository.save(new ConfirmationEntity(userEntity, suppliesKey.get()));
         locationRepository.save(LocationUtils.buildLocation(user.location(), userEntity));
 
-        sendMessageToBroker(userEntity.fullName(), user.email(), confirmation.getKey());
+        sendMessageToBroker(userEntity.fullName(), user.email(), confirmation.getKeyCode());
     }
     @Override
     public void verifyAccount(String key) {

@@ -1,6 +1,5 @@
 package com.zel92.product.entity;
 
-import com.zel92.product.enumeration.CategoryType;
 import jakarta.persistence.*;
 import lombok.*;
 
