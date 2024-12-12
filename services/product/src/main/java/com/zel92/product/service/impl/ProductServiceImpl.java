@@ -117,22 +117,4 @@ public class ProductServiceImpl implements ProductService {
         var token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(7);
         return userClient.retrieveUser(token);
     }
-
-    //Methods created for Testing Practice, please delete these methods bellow after done messing around with Unit Testing
-
-    public ProductEntity addProduct(ProductEntity product){
-        if (validateProductName(product.getName())){
-            return productRepository.save(product);
-        }
-        throw new RuntimeException("Invalid name");
-    }
-
-    public void delete(Long id){
-        productRepository.deleteById(id);
-    }
-
-    private boolean validateProductName(String name){
-        return name != null && !name.isEmpty();
-    }
-
 }

@@ -14,41 +14,43 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handle(UserNotFoundException exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(401, HttpStatus.BAD_REQUEST, exception.getMessage())
+                new ErrorResponse(400, BAD_REQUEST, exception.getMessage())
         );
     }
 
     @ExceptionHandler(CustomInvalidKeyException.class)
     public ResponseEntity<ErrorResponse> handle(CustomInvalidKeyException exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(400, HttpStatus.BAD_REQUEST, exception.getMessage())
+                new ErrorResponse(400, BAD_REQUEST, exception.getMessage())
         );
     }
 
     @ExceptionHandler(ConfirmationKeyExpiredException.class)
     public ResponseEntity<ErrorResponse> handle(ConfirmationKeyExpiredException exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(404, HttpStatus.NOT_FOUND, exception.getMessage())
+                new ErrorResponse(404, NOT_FOUND, exception.getMessage())
         );
     }
 
     @ExceptionHandler(RoleDoesntExistException.class)
     public ResponseEntity<ErrorResponse> handle(RoleDoesntExistException exception){
         return ResponseEntity.badRequest().body(
-                new ErrorResponse(404, HttpStatus.NOT_FOUND, exception.getMessage())
+                new ErrorResponse(404, NOT_FOUND, exception.getMessage())
         );
     }
 
     @ExceptionHandler(PermissionDeniedException.class)
     public ResponseEntity<ErrorResponse> handle(PermissionDeniedException exception){
-        return ResponseEntity.badRequest().body(
-                new ErrorResponse(403, HttpStatus.FORBIDDEN, exception.getMessage())
+        return ResponseEntity.status(FORBIDDEN).body(
+                new ErrorResponse(403, FORBIDDEN, exception.getMessage())
         );
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -60,13 +62,13 @@ public class GlobalExceptionHandler {
             var message = error.getDefaultMessage();
             errors.put(fieldName, message);
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(400, HttpStatus.BAD_REQUEST, "Invalid fields", errors));
+        return ResponseEntity.status(BAD_REQUEST).body(new ErrorResponse(400, BAD_REQUEST, "Invalid fields", errors));
     }
 
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<ErrorResponse> handle(MalformedJwtException exception){
         return ResponseEntity.status(401).body(
-                new ErrorResponse(401, HttpStatus.UNAUTHORIZED, exception.getMessage())
+                new ErrorResponse(401, UNAUTHORIZED, exception.getMessage())
         );
     }
 

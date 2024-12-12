@@ -1,9 +1,10 @@
 package com.zel92.user.dto.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
 import java.time.LocalDate;
-
+@Builder
 public record UserRequest(
         @NotBlank(message = "The field first name is required")
         @NotEmpty(message = "The field first name is required")

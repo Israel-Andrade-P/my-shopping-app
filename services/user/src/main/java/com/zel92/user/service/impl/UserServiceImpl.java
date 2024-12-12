@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String userId) {
         UserEntity userEntity = getUserEntityByUserId(userId);
-        if (checkAuthStatus(userId)){
-            userRepository.delete(userEntity);
+        if (!checkAuthStatus(userEntity.getEmail())){
+            throw new PermissionDeniedException("You don't have enough permission for that");
         }
-        throw new PermissionDeniedException("You don't have enough permission for that");
+        userRepository.delete(userEntity);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoResp fetchById(String userId) {
         var user = getUserEntityByUserId(userId);
-        if (checkAuthStatus(userId)){
+        if (checkAuthStatus(user.getEmail())){
             return UserUtils.toUserInfoResp(user);
         }
 
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public void updateUser(String userId, UserRequest user) {
         var userDB = getUserEntityByUserId(userId);
 
-        if (checkAuthStatus(userId)){
+        if (checkAuthStatus(userDB.getEmail())){
             if (StringUtils.isNotBlank(user.firstName())){
                 userDB.setFirstName(user.firstName());
             }
@@ -98,14 +98,13 @@ public class UserServiceImpl implements UserService {
         } else throw new PermissionDeniedException("You don't have enough permission for that");
     }
 
-    private Boolean checkAuthStatus(String userId) {
-        var user = getUserEntityByUserId(userId);
+    private Boolean checkAuthStatus(String email) {
         var auth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         List<String> authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         if (authorities.contains("user:delete")){
             return true;
         }else {
-            return Objects.equals(user.getEmail(), auth.getEmail());
+            return Objects.equals(email, auth.getEmail());
         }
     }
 

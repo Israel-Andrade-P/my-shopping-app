@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithMockCustomUserSecurityContextFactory.class)
 public @interface WithMockCustomUser {
-    String username() default "customUser";
-    String[] roles() default {"USER"};
+    String username() default "customUser@gmail";
+    String[] roles() default {"USER", "user:delete"};
 }
 
