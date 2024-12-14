@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserInfoResp> fetchAll() {
-        return userRepository.findAll().stream().map(UserUtils::toUserInfoResp).toList();
+        var users = userRepository.findAll();
+        return users.stream().map(UserUtils::toUserInfoResp).toList();
     }
 
     @Override

@@ -122,6 +122,8 @@ public class UserControllerTest {
                 .exchange()
                 .assertThat()
                 .hasStatus(OK);
+
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -160,5 +162,7 @@ public class UserControllerTest {
                 .hasStatus(OK)
                 .bodyText()
                 .contains("User has been deleted successfully!", "/api/v1/users/delete");
+
+        verify(userRepository).delete(user);
     }
 }
