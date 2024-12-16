@@ -1,0 +1,1 @@
+ALTER TABLE confirmations RENAME COLUMN key TO key_code;

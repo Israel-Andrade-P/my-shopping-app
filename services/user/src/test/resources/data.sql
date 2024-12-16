@@ -1,1 +1,0 @@
-INSERT INTO roles (name, authority) VALUES ('USER', 'product:create,product:read,product:update,product:delete');
