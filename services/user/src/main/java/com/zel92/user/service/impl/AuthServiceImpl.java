@@ -18,6 +18,7 @@ import java.security.SecureRandom;
 import java.util.function.Supplier;
 
 import static com.zel92.user.constants.Constants.EXPIRATION;
+import static com.zel92.user.utils.LocationUtils.*;
 import static com.zel92.user.utils.UserUtils.*;
 import static java.time.LocalDateTime.now;
 
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService{
         UserEntity userEntity = userRepository.save(createNewUser(user));
         credentialRepository.save(new CredentialEntity(userEntity, encoder.encode(user.password())));
         ConfirmationEntity confirmation = confirmationRepository.save(new ConfirmationEntity(userEntity, suppliesKey.get()));
-        locationRepository.save(LocationUtils.buildLocation(user.location(), userEntity));
+        locationRepository.save(buildLocation(user.location(), userEntity));
 
         sendMessageToBroker(userEntity.fullName(), user.email(), confirmation.getKeyCode());
     }

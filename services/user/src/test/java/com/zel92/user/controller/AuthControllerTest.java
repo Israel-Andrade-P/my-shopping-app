@@ -11,6 +11,8 @@ import com.zel92.user.enumeration.Authority;
 import com.zel92.user.kafka.UserProducer;
 import com.zel92.user.model.User;
 import com.zel92.user.repository.*;
+import com.zel92.user.security.CustomAuthenticationManager;
+import com.zel92.user.security.SecurityConfig;
 import com.zel92.user.service.JwtService;
 import com.zel92.user.service.impl.AuthServiceImpl;
 import com.zel92.user.service.impl.JwtServiceImpl;
@@ -40,7 +42,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(controllers = { AuthController.class })
-@Import({AuthServiceImpl.class, JwtServiceImpl.class})
+@Import({AuthServiceImpl.class, JwtServiceImpl.class, SecurityConfig.class})
 public class AuthControllerTest {
 
     private static final Logger log = Logger.getLogger(AuthControllerTest.class.getName());
@@ -68,6 +70,8 @@ public class AuthControllerTest {
     PasswordEncoder encoder;
     @MockitoBean
     CacheStore<String, Integer> cache;
+    @MockitoBean
+    CustomAuthenticationManager manager;
 
     static UserEntity user;
     static CredentialEntity credential;
@@ -122,7 +126,6 @@ public class AuthControllerTest {
     }
     @Test
     @DisplayName("Should create and persist user")
-    @WithMockUser(username = "user")
     public void registerUserTest() throws JsonProcessingException {
 
         when(userRepository.save(any(UserEntity.class))).thenReturn(user);
@@ -131,7 +134,6 @@ public class AuthControllerTest {
 
         mockMvc
                 .post()
-                .with(csrf())
                 .uri("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(userRequest))
@@ -146,7 +148,6 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Should fail")
-    @WithMockUser(username = "user")
     public void registerUserTest2() throws JsonProcessingException {
 
         mockMvc
@@ -163,7 +164,6 @@ public class AuthControllerTest {
     }
     @Test
     @DisplayName("Should verify and enable user")
-    @WithMockUser(username = "user")
     public void verifyAccountTest(){
 
         when(confirmationRepository.findByKey("3746862")).thenReturn(Optional.of(confirmation));
@@ -186,7 +186,6 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Should validate token")
-    @WithMockUser(username = "user")
     public void validateJwtTest(){
 
         String jwt = jwtService.createToken(model, Token::getAccess);
@@ -206,7 +205,6 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Should fail")
-    @WithMockUser(username = "user")
     public void validateJwtTest2(){
 
         mockMvc
@@ -222,7 +220,6 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Should retrieve a user")
-    @WithMockUser(username = "user")
     public void retrieveUserTest(){
 
         String jwt = jwtService.createToken(model, Token::getAccess);
@@ -243,7 +240,6 @@ public class AuthControllerTest {
 
     @Test
     @DisplayName("Should fail")
-    @WithMockUser(username = "user")
     public void retrieveUserTest2(){
 
         mockMvc
@@ -256,6 +252,8 @@ public class AuthControllerTest {
                 .bodyText()
                 .contains("Invalid compact JWT string");
     }
+
+
 
     @AfterAll
     public static void cleanup(){

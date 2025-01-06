@@ -7,9 +7,8 @@ import com.zel92.user.domain.UserSecurity;
 import com.zel92.user.dto.request.LoginRequest;
 import com.zel92.user.dto.response.LoginResponse;
 import com.zel92.user.security.CustomAuthenticationManager;
-import com.zel92.user.service.JwtService;
 import com.zel92.user.service.AuthService;
-import com.zel92.user.utils.RequestUtils;
+import com.zel92.user.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 
@@ -30,6 +28,7 @@ import static com.fasterxml.jackson.core.JsonParser.Feature.AUTO_CLOSE_SOURCE;
 import static com.zel92.user.constants.Constants.LOGIN_PATH;
 import static com.zel92.user.enumeration.LoginType.LOGIN_ATTEMPT;
 import static com.zel92.user.enumeration.LoginType.LOGIN_SUCCESS;
+import static com.zel92.user.utils.RequestUtils.handleErrorResponse;
 import static com.zel92.user.utils.UserUtils.fromUserSecurity;
 
 @Slf4j
@@ -51,7 +50,7 @@ public class AuthFilter extends AbstractAuthenticationProcessingFilter {
             return getAuthenticationManager().authenticate(authentication);
         }catch (Exception e){
             log.error(e.getMessage());
-            RequestUtils.handleErrorResponse(request, response, e);
+            handleErrorResponse(request, response, e);
             return null;
         }
     }

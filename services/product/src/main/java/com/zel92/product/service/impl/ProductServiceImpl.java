@@ -106,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private CategoryEntity getCategoryByType(String type) {
+        //todo Test conversion when fetching data from DB from String to CategoryType
         return categoryRepository.findByType(type).orElseThrow(() -> new CategoryNotFoundException("Category not found"));
     }
 

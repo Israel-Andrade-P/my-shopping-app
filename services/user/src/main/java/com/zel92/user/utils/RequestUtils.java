@@ -50,7 +50,7 @@ public class RequestUtils {
     }
 
     public static void handleErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception){
-            Response apiResponse = getErrorResponse(request, response, exception, FORBIDDEN);
+            Response apiResponse = getErrorResponse(request, response, exception);
             writeResponse.accept(response, apiResponse);
     }
 
@@ -59,9 +59,9 @@ public class RequestUtils {
 //        return FORBIDDEN;
 //    }
 
-    private static Response getErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception, HttpStatus status) {
+    private static Response getErrorResponse(HttpServletRequest request, HttpServletResponse response, Exception exception) {
         response.setContentType(APPLICATION_JSON_VALUE);
-        response.setStatus(status.value());
-        return new Response(now().toString(), status.value(), request.getRequestURI(), HttpStatus.valueOf(status.value()), errorReason.apply(exception, status), getRootCauseMessage(exception), emptyMap());
+        response.setStatus(FORBIDDEN.value());
+        return new Response(now().toString(), FORBIDDEN.value(), request.getRequestURI(), HttpStatus.valueOf(FORBIDDEN.name()), errorReason.apply(exception, FORBIDDEN), getRootCauseMessage(exception), emptyMap());
     }
 }

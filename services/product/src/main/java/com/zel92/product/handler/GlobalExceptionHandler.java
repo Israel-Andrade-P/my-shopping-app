@@ -1,6 +1,7 @@
 package com.zel92.product.handler;
 
 import com.zel92.product.exception.AuthorizationFailedException;
+import com.zel92.product.exception.ProductNotFoundException;
 import com.zel92.product.exception.ServerDownException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +13,10 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handle(ProductNotFoundException exp){
+        return ResponseEntity.status(NOT_FOUND).body(new ErrorResponse(404, NOT_FOUND, exp.getMessage()));
+    }
     @ExceptionHandler(AuthorizationFailedException.class)
     public ResponseEntity<ErrorResponse> handle(AuthorizationFailedException exp){
         return ResponseEntity.status(FORBIDDEN).body(new ErrorResponse(403, FORBIDDEN, exp.getMessage()));

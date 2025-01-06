@@ -1,5 +1,6 @@
 package com.zel92.product.entity;
 
+import com.zel92.product.enumeration.CategoryType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,5 +17,5 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "primary_key_seq")
     private Long id;
     @Column(name = "type", nullable = false, unique = true)
-    private String type;
+    private CategoryType type;
 }

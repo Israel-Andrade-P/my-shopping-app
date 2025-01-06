@@ -1,0 +1,25 @@
+
+#spring.jpa.hibernate.ddl-auto=create-drop
+#spring.datasource.jpa.database-platform=org.hibernate.dialect.PostgreSQLInnoDBDialect
+#spring.flyway.enabled=true
+spring:
+  config:
+    import: optional:configserver:http://localhost:8000
+  kafka:
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    properties:
+       schema.registry.url: ${spring.kafka.properties.schema.registry.url}
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    producer:
+       key-serializer: org.apache.kafka.common.serialization.StringSerializer
+       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+eureka:
+  client:
+    enabled: false
+jwt:
+  secret: cHJpemVjbGltYmVsc2V3aXRobmVnYXRpdmV0b3NhZmV0eWZyZXF1ZW50bHlkb29ydXBwZXJtb3Rpb25pbmNyZWFzZXBsYWluc3Rp
+  expiration: 1800
+

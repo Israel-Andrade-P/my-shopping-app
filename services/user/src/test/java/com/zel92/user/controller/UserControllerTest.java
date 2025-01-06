@@ -12,6 +12,7 @@ import com.zel92.user.repository.UserRepository;
 import com.zel92.user.securitytest.WithMockCustomUser;
 import com.zel92.user.service.JwtService;
 import com.zel92.user.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -164,5 +165,12 @@ public class UserControllerTest {
                 .contains("User has been deleted successfully!", "/api/v1/users/delete");
 
         verify(userRepository).delete(user);
+    }
+
+    @AfterAll
+    public static void cleanup(){
+        log.log(Level.INFO, "[AFTER_ALL] Cleaning up...");
+        user = null;
+        userRequest = null;
     }
 }
